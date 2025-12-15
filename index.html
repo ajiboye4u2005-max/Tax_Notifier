@@ -32,7 +32,7 @@
             color: white;
             padding: 30px;
             text-align: center;
-            position: relative; /* Added for user-info positioning */
+            position: relative; 
         }
 
         .header h1 {
@@ -175,7 +175,7 @@
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* Adjusted shadow for subtlety */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
             border-left: 4px solid #667eea;
         }
 
@@ -300,7 +300,7 @@
             border: 1px solid #bee5eb;
         }
 
-        .alert.error { /* Added error alert style */
+        .alert.error { 
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
@@ -390,7 +390,7 @@
             color: #667eea;
         }
         
-        /* Resource Guide Styles (from index (5).html) */
+        /* Resource Guide Styles */
         .resource-category-tab {
             padding: 15px 20px;
             margin-bottom: 10px;
@@ -813,17 +813,17 @@
         // Tax deadline configurations based on Nigeria Tax Act 2025
         const TAX_DEADLINES = {
             CIT: {
-                registration: { days: 0, type: 'Registration', penalty: { first: 50000, subsequent: 25000 } },
-                filing: { days: 180, type: 'Tax Return Filing', penalty: { first: 100000, subsequent: 50000 } },
-                payment: { days: 30, type: 'Tax Payment', penalty: { rate: 0.10, interest: true } }
+                registration: { days: 0, type: 'CIT Registration', penalty: { first: 50000, subsequent: 25000 } },
+                filing: { days: 180, type: 'CIT Tax Return Filing', penalty: { first: 100000, subsequent: 50000 } },
+                payment: { days: 30, type: 'CIT Tax Payment', penalty: { rate: 0.10, interest: true } }
             },
             PAYE: {
                 monthly_remittance: { days: 14, type: 'Monthly PAYE Remittance', penalty: { rate: 0.10, interest: true, criminal: true } },
                 annual_return: { days: 31, type: 'Annual PAYE Return', penalty: { first: 100000, subsequent: 50000 }, date: '01-31' }
             },
             PIT: {
-                registration: { days: 0, type: 'Registration', penalty: { first: 50000, subsequent: 25000 } },
-                filing: { days: 31, type: 'Annual Tax Return', penalty: { first: 100000, subsequent: 50000 }, date: '01-31' }
+                registration: { days: 0, type: 'PIT Registration', penalty: { first: 50000, subsequent: 25000 } },
+                filing: { days: 31, type: 'Annual PIT Tax Return', penalty: { first: 100000, subsequent: 50000 }, date: '01-31' }
             },
             VAT: {
                 registration: { days: 0, type: 'VAT Registration', penalty: { first: 50000, subsequent: 25000 } },
@@ -856,7 +856,6 @@
             if (savedSession) {
                 const session = JSON.parse(savedSession);
                 if (session.email && users[session.email]) {
-                    // Check if registration date is present (to identify valid/initialized user)
                     if(users[session.email].registrationDate) {
                         autoLogin(session.email);
                     }
@@ -885,7 +884,6 @@
                     autoLogin(session.email);
                 }
             }
-            // Ensure Auth Section is visible if not logged in
             if (!currentUser) {
                 document.getElementById('authSection').classList.remove('hidden');
             }
@@ -898,7 +896,7 @@
             showTab('alertSystem');
         }
 
-        // FUNCTION to handle main tab switching (Modified from index (5).html)
+        // FUNCTION to handle main tab switching
         function showTab(tabName) {
             const alertSystem = document.getElementById('alertSystemContent');
             const resources = document.getElementById('resourcesSection');
@@ -918,11 +916,10 @@
             }
         }
         
-        // FUNCTION to handle Auth tab switching (from index (4).html)
+        // FUNCTION to handle Auth tab switching
         function showAuthTab(tab) {
             const tabs = document.querySelectorAll('.tabs .tab');
             tabs.forEach(t => t.classList.remove('active'));
-            // Use event.currentTarget since this is called from an onclick
             const clickedTab = event.currentTarget;
             clickedTab.classList.add('active');
 
@@ -996,7 +993,6 @@
                 return;
             }
 
-            // Validate tax selections
             if (entityType === 'individual' && selectedTaxes.includes('CIT')) {
                 showAlert('error', 'Individuals cannot select Company Income Tax (CIT)');
                 return;
@@ -1045,9 +1041,14 @@
             showTab('alertSystem');
         }
 
+        // ----------------------------------------------------------------------
+        // FIX APPLIED HERE: Corrected logic for generating next upcoming deadlines
+        // ----------------------------------------------------------------------
         function generateDeadlines() {
             const deadlines = [];
             const today = new Date();
+            // Normalize 'today' to midnight for accurate comparison
+            today.setHours(0, 0, 0, 0); 
             const yearEnd = currentUser.yearEnd ? new Date(currentUser.yearEnd) : null;
 
             currentUser.selectedTaxes.forEach(tax => {
@@ -1055,62 +1056,80 @@
                 
                 Object.keys(config).forEach(obligationKey => {
                     const obligation = config[obligationKey];
-                    let deadline;
+                    let deadline = null; // Initialize deadline
 
                     if (obligation.date) {
+                        // Logic for annual deadlines with fixed date (e.g., Jan 31st for Annual PIT Return)
                         const [month, day] = obligation.date.split('-');
                         deadline = new Date(today.getFullYear(), parseInt(month) - 1, parseInt(day));
+                        deadline.setHours(0, 0, 0, 0); 
+                        
                         // If the annual deadline already passed this year, set it for next year
                         if (deadline < today) {
                             deadline.setFullYear(deadline.getFullYear() + 1);
                         }
-                    } else if (tax === 'CIT' && obligationKey === 'filing' && yearEnd) {
+                    } else if (tax === 'CIT' && obligationKey.includes('filing') && yearEnd) {
+                        // CIT Filing (6 months after year end)
                         deadline = new Date(yearEnd);
                         deadline.setMonth(deadline.getMonth() + 6);
-                        // If deadline passed, calculate from next year's year end
+                        deadline.setHours(0, 0, 0, 0); 
                         if (deadline < today) {
                             deadline = new Date(yearEnd);
                             deadline.setFullYear(deadline.getFullYear() + 1);
                             deadline.setMonth(deadline.getMonth() + 6);
                         }
-                    } else if (tax === 'CIT' && obligationKey === 'payment' && yearEnd) {
+                    } else if (tax === 'CIT' && obligationKey.includes('payment') && yearEnd) {
+                        // CIT Payment (7 months after year end)
                         deadline = new Date(yearEnd);
                         deadline.setMonth(deadline.getMonth() + 7);
+                        deadline.setHours(0, 0, 0, 0); 
                         if (deadline < today) {
                             deadline = new Date(yearEnd);
                             deadline.setFullYear(deadline.getFullYear() + 1);
                             deadline.setMonth(deadline.getMonth() + 7);
                         }
                     } else if (obligationKey.includes('monthly')) {
-                        // For monthly obligations, set for the next month
-                        deadline = new Date(today.getFullYear(), today.getMonth() + 1, obligation.days);
-                        // If day of the month is less than today, increment month
-                        if (new Date(today.getFullYear(), today.getMonth(), obligation.days) < today) {
-                             deadline = new Date(today.getFullYear(), today.getMonth() + 1, obligation.days);
-                        } else {
-                            deadline = new Date(today.getFullYear(), today.getMonth(), obligation.days);
-                        }
+                        // Logic for monthly obligations (e.g., PAYE/VAT Remittance)
+                        const dayOfMonth = obligation.days;
+                        const currentMonthDeadline = new Date(today.getFullYear(), today.getMonth(), dayOfMonth);
+                        currentMonthDeadline.setHours(0, 0, 0, 0); 
 
-                    } else {
-                        // Registration deadlines (immediate, usually already past or today)
+                        if (currentMonthDeadline < today) {
+                             // Deadline for this month has passed, set for next month
+                             deadline = new Date(today.getFullYear(), today.getMonth() + 1, dayOfMonth);
+                        } else {
+                            // Deadline for this month hasn't passed, use this month
+                            deadline = currentMonthDeadline;
+                        }
+                        deadline.setHours(0, 0, 0, 0); // Final normalization
+
+                    } else if (obligationKey.includes('registration')) {
+                        // Registration deadlines are generally considered complete, but if pending, set as today
                         deadline = new Date(today);
+                        deadline.setHours(0, 0, 0, 0); 
                     }
 
-                    deadlines.push({
-                        tax,
-                        obligation: obligationKey,
-                        type: obligation.type,
-                        deadline: deadline.toISOString(), // Store as ISO string
-                        penalty: obligation.penalty,
-                        completed: false,
-                        id: Date.now() + Math.random()
-                    });
+                    // Only push if a valid deadline date was generated
+                    if (deadline) { 
+                        deadlines.push({
+                            tax,
+                            obligation: obligationKey,
+                            type: obligation.type,
+                            deadline: deadline.toISOString(), // Store as ISO string
+                            penalty: obligation.penalty,
+                            completed: false,
+                            id: Date.now() + Math.random() // Unique ID for markComplete
+                        });
+                    }
                 });
             });
 
             currentUser.deadlines = deadlines;
             users[currentUser.email] = currentUser;
         }
+        // ----------------------------------------------------------------------
+        // END OF FIX
+        // ----------------------------------------------------------------------
 
         function updateUserDeadlines() {
             // Convert ISO string back to Date object for calculation
@@ -1133,6 +1152,7 @@
 
         function refreshDashboard() {
             const today = new Date();
+            today.setHours(0, 0, 0, 0); // Normalize today for comparison
             let upcomingCount = 0;
             let overdueCount = 0;
 
@@ -1144,17 +1164,18 @@
             upcomingList.innerHTML = '';
             allList.innerHTML = '';
 
-            userDeadlines.forEach((item, index) => {
+            userDeadlines.forEach((item) => {
                 if (item.completed) return;
 
-                const daysUntil = calculateDaysUntil(item.deadline);
+                // Pass the Date object from userDeadlines, not the ISO string
+                const daysUntil = calculateDaysUntil(item.deadline); 
                 const isOverdue = daysUntil < 0;
                 const isUpcoming = daysUntil >= 0 && daysUntil <= 30;
 
                 if (isOverdue) overdueCount++;
                 if (isUpcoming) upcomingCount++;
 
-                const deadlineHTML = createDeadlineHTML(item, index, daysUntil);
+                const deadlineHTML = createDeadlineHTML(item, daysUntil);
 
                 if (isOverdue) {
                     overdueList.innerHTML += deadlineHTML;
@@ -1176,12 +1197,12 @@
             }
         }
 
-        function calculateDaysUntil(deadline) {
+        function calculateDaysUntil(deadlineDate) {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-            const deadlineDate = new Date(deadline);
-            deadlineDate.setHours(0, 0, 0, 0);
-            const diff = deadlineDate - today;
+            
+            // deadlineDate is already a Date object from updateUserDeadlines()
+            const diff = deadlineDate.getTime() - today.getTime();
             return Math.ceil(diff / (1000 * 60 * 60 * 24));
         }
 
@@ -1204,7 +1225,7 @@
             return 'Contact tax authority';
         }
 
-        function createDeadlineHTML(item, index, daysUntil) {
+        function createDeadlineHTML(item, daysUntil) {
             const isOverdue = daysUntil < 0;
             const statusClass = isOverdue ? 'overdue' : (daysUntil <= 7 ? 'upcoming' : '');
             const daysClass = isOverdue ? 'overdue' : (daysUntil <= 7 ? 'warning' : '');
@@ -1223,7 +1244,8 @@
                    </div>`
                 : '';
                 
-            const deadlineDate = new Date(item.deadline).toLocaleDateString('en-GB');
+            // Use the Date object directly
+            const deadlineDate = item.deadline.toLocaleDateString('en-GB');
 
             return `
                 <div class="deadline-item ${statusClass}">
@@ -1247,8 +1269,10 @@
             `;
         }
 
+        // FIX APPLIED HERE: Used parseFloat for robust ID comparison
         function markComplete(id) {
-            const indexToUpdate = currentUser.deadlines.findIndex(d => d.id === parseFloat(id));
+            const numId = parseFloat(id);
+            const indexToUpdate = currentUser.deadlines.findIndex(d => d.id === numId);
             if (indexToUpdate !== -1) {
                 currentUser.deadlines[indexToUpdate].completed = true;
                 
@@ -1261,7 +1285,7 @@
             }
         }
         
-        // NEW FUNCTION to handle accordion toggle in the Resources tab (from index (5).html)
+        // NEW FUNCTION to handle accordion toggle in the Resources tab 
         function toggleAccordion(id) {
             const content = document.getElementById(id);
             const tabButton = content.previousElementSibling;
