@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nigeria Tax Alert & Reminder System</title>
     <style>
+        /* [STYLES ARE KEPT THE SAME AS PREVIOUS ITERATION] */
         * {
             margin: 0;
             padding: 0;
@@ -810,7 +811,6 @@
     </div>
 
     <script>
-        // Tax deadline configurations based on Nigeria Tax Act 2025
         const TAX_DEADLINES = {
             CIT: {
                 registration: { days: 0, type: 'CIT Registration', penalty: { first: 50000, subsequent: 25000 } },
@@ -840,7 +840,6 @@
         let users = {};
         let userDeadlines = [];
 
-        // Load data from localStorage on page load
         window.addEventListener('load', () => {
             loadData();
             checkAutoLogin();
@@ -891,12 +890,18 @@
 
         function autoLogin(email) {
             currentUser = users[email];
+            
+            // CRITICAL FIX: Regenerate deadlines if the existing list is empty (failed registration)
+            if (!currentUser.deadlines || currentUser.deadlines.length === 0) {
+                generateDeadlines(); 
+                saveData(); // Save the newly generated deadlines
+            }
+
             document.getElementById('authSection').classList.add('hidden');
             showDashboard();
             showTab('alertSystem');
         }
 
-        // FUNCTION to handle main tab switching
         function showTab(tabName) {
             const alertSystem = document.getElementById('alertSystemContent');
             const resources = document.getElementById('resourcesSection');
@@ -916,7 +921,6 @@
             }
         }
         
-        // FUNCTION to handle Auth tab switching
         function showAuthTab(tab) {
             const tabs = document.querySelectorAll('.tabs .tab');
             tabs.forEach(t => t.classList.remove('active'));
@@ -952,6 +956,13 @@
             }
 
             currentUser = users[email];
+            
+            // CRITICAL FIX: Regenerate deadlines if the existing list is empty (failed registration)
+            if (!currentUser.deadlines || currentUser.deadlines.length === 0) {
+                generateDeadlines(); 
+                saveData(); // Save the newly generated deadlines
+            }
+            
             saveSession(email);
             showAlert('success', `Welcome back, ${currentUser.name}!`);
             setTimeout(() => {
@@ -999,23 +1010,24 @@
             }
 
             if (entityType === 'small_business' && selectedTaxes.includes('CIT')) {
+                // Keep the info alert, does not stop registration
                 showAlert('info', 'Note: Small businesses with turnover ≤ ₦100M are exempt from CIT (0% rate)');
             }
 
-            // Create new user
+            // Create new user object
             users[email] = {
                 name,
                 email,
                 password,
                 entityType,
-                yearEnd: yearEnd ? new Date(yearEnd).toISOString() : null, // Store as ISO string
+                yearEnd: yearEnd || null, // Store as string 'YYYY-MM-DD'
                 selectedTaxes,
                 registrationDate: new Date().toISOString(),
-                deadlines: []
+                deadlines: [] // Initialize empty, then populate
             };
 
             currentUser = users[email];
-            generateDeadlines();
+            generateDeadlines(); // Generate deadlines immediately on registration
             
             saveData();
             saveSession(email);
@@ -1033,7 +1045,6 @@
             document.getElementById('dashboard').classList.add('hidden');
             document.getElementById('userInfo').classList.add('hidden');
             
-            // Clear forms
             document.getElementById('loginEmail').value = '';
             document.getElementById('loginPassword').value = '';
             
@@ -1041,14 +1052,12 @@
             showTab('alertSystem');
         }
 
-        // ----------------------------------------------------------------------
-        // FIX APPLIED HERE: Corrected logic for generating next upcoming deadlines
-        // ----------------------------------------------------------------------
         function generateDeadlines() {
             const deadlines = [];
             const today = new Date();
-            // Normalize 'today' to midnight for accurate comparison
+            // Normalize 'today' to midnight (00:00:00) for accurate comparison
             today.setHours(0, 0, 0, 0); 
+            
             const yearEnd = currentUser.yearEnd ? new Date(currentUser.yearEnd) : null;
 
             currentUser.selectedTaxes.forEach(tax => {
@@ -1056,15 +1065,15 @@
                 
                 Object.keys(config).forEach(obligationKey => {
                     const obligation = config[obligationKey];
-                    let deadline = null; // Initialize deadline
+                    let deadline = null; 
 
                     if (obligation.date) {
-                        // Logic for annual deadlines with fixed date (e.g., Jan 31st for Annual PIT Return)
+                        // Annual deadlines (e.g., Jan 31st)
                         const [month, day] = obligation.date.split('-');
                         deadline = new Date(today.getFullYear(), parseInt(month) - 1, parseInt(day));
                         deadline.setHours(0, 0, 0, 0); 
                         
-                        // If the annual deadline already passed this year, set it for next year
+                        // If deadline passed this year, set it for next year
                         if (deadline < today) {
                             deadline.setFullYear(deadline.getFullYear() + 1);
                         }
@@ -1073,6 +1082,7 @@
                         deadline = new Date(yearEnd);
                         deadline.setMonth(deadline.getMonth() + 6);
                         deadline.setHours(0, 0, 0, 0); 
+                        
                         if (deadline < today) {
                             deadline = new Date(yearEnd);
                             deadline.setFullYear(deadline.getFullYear() + 1);
@@ -1083,34 +1093,37 @@
                         deadline = new Date(yearEnd);
                         deadline.setMonth(deadline.getMonth() + 7);
                         deadline.setHours(0, 0, 0, 0); 
+                        
                         if (deadline < today) {
                             deadline = new Date(yearEnd);
                             deadline.setFullYear(deadline.getFullYear() + 1);
                             deadline.setMonth(deadline.getMonth() + 7);
                         }
                     } else if (obligationKey.includes('monthly')) {
-                        // Logic for monthly obligations (e.g., PAYE/VAT Remittance)
+                        // Monthly obligations (PAYE, VAT, WHT Remittance/Return)
                         const dayOfMonth = obligation.days;
+                        
+                        // Check if the current month's deadline has passed
                         const currentMonthDeadline = new Date(today.getFullYear(), today.getMonth(), dayOfMonth);
                         currentMonthDeadline.setHours(0, 0, 0, 0); 
 
                         if (currentMonthDeadline < today) {
-                             // Deadline for this month has passed, set for next month
+                             // Deadline passed, set for next month
                              deadline = new Date(today.getFullYear(), today.getMonth() + 1, dayOfMonth);
                         } else {
-                            // Deadline for this month hasn't passed, use this month
+                            // Deadline is current or upcoming, use this month
                             deadline = currentMonthDeadline;
                         }
-                        deadline.setHours(0, 0, 0, 0); // Final normalization
+                        deadline.setHours(0, 0, 0, 0); 
 
                     } else if (obligationKey.includes('registration')) {
-                        // Registration deadlines are generally considered complete, but if pending, set as today
+                        // Registration deadlines are often immediate or initial, set as today
                         deadline = new Date(today);
                         deadline.setHours(0, 0, 0, 0); 
                     }
 
                     // Only push if a valid deadline date was generated
-                    if (deadline) { 
+                    if (deadline && !isNaN(deadline.getTime())) { 
                         deadlines.push({
                             tax,
                             obligation: obligationKey,
@@ -1118,7 +1131,7 @@
                             deadline: deadline.toISOString(), // Store as ISO string
                             penalty: obligation.penalty,
                             completed: false,
-                            id: Date.now() + Math.random() // Unique ID for markComplete
+                            id: Date.now() + Math.random() // Unique ID
                         });
                     }
                 });
@@ -1127,9 +1140,6 @@
             currentUser.deadlines = deadlines;
             users[currentUser.email] = currentUser;
         }
-        // ----------------------------------------------------------------------
-        // END OF FIX
-        // ----------------------------------------------------------------------
 
         function updateUserDeadlines() {
             // Convert ISO string back to Date object for calculation
@@ -1152,7 +1162,7 @@
 
         function refreshDashboard() {
             const today = new Date();
-            today.setHours(0, 0, 0, 0); // Normalize today for comparison
+            today.setHours(0, 0, 0, 0); 
             let upcomingCount = 0;
             let overdueCount = 0;
 
@@ -1167,7 +1177,6 @@
             userDeadlines.forEach((item) => {
                 if (item.completed) return;
 
-                // Pass the Date object from userDeadlines, not the ISO string
                 const daysUntil = calculateDaysUntil(item.deadline); 
                 const isOverdue = daysUntil < 0;
                 const isUpcoming = daysUntil >= 0 && daysUntil <= 30;
@@ -1193,7 +1202,7 @@
             document.getElementById('upcomingSection').style.display = upcomingCount > 0 ? 'block' : 'none';
 
             if (allList.innerHTML === '') {
-                allList.innerHTML = '<p style="color: #666; padding: 20px; text-align: center;">All tax obligations completed! 🎉</p>';
+                allList.innerHTML = '<p style="color: #666; padding: 20px; text-align: center;">All pending tax obligations completed! 🎉</p>';
             }
         }
 
@@ -1201,7 +1210,6 @@
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             
-            // deadlineDate is already a Date object from updateUserDeadlines()
             const diff = deadlineDate.getTime() - today.getTime();
             return Math.ceil(diff / (1000 * 60 * 60 * 24));
         }
@@ -1210,7 +1218,6 @@
             const penalty = deadline.penalty;
             
             if (penalty.first && penalty.subsequent) {
-                // Calculation for fixed penalties (e.g., N100k first month + N50k subsequent)
                 const months = Math.ceil(Math.abs(daysOverdue) / 30);
                 if (months <= 1) {
                     return penalty.first.toLocaleString();
@@ -1218,7 +1225,6 @@
                     return (penalty.first + (penalty.subsequent * (months - 1))).toLocaleString();
                 }
             } else if (penalty.rate) {
-                // Calculation for percentage penalties (e.g., 10% + interest)
                 return `${(penalty.rate * 100)}% of tax due${penalty.interest ? ' + CBN interest rate' : ''}`;
             }
             
@@ -1244,7 +1250,6 @@
                    </div>`
                 : '';
                 
-            // Use the Date object directly
             const deadlineDate = item.deadline.toLocaleDateString('en-GB');
 
             return `
@@ -1269,14 +1274,12 @@
             `;
         }
 
-        // FIX APPLIED HERE: Used parseFloat for robust ID comparison
         function markComplete(id) {
             const numId = parseFloat(id);
             const indexToUpdate = currentUser.deadlines.findIndex(d => d.id === numId);
             if (indexToUpdate !== -1) {
                 currentUser.deadlines[indexToUpdate].completed = true;
                 
-                // Update in storage
                 users[currentUser.email] = currentUser;
                 saveData();
                 
@@ -1285,13 +1288,11 @@
             }
         }
         
-        // NEW FUNCTION to handle accordion toggle in the Resources tab 
         function toggleAccordion(id) {
             const content = document.getElementById(id);
             const tabButton = content.previousElementSibling;
             const icon = tabButton.querySelector('.accordion-icon');
 
-            // Close all other open content sections
             document.querySelectorAll('.category-content').forEach(otherContent => {
                 if (otherContent.id !== id && otherContent.style.display === 'block') {
                     otherContent.style.display = 'none';
@@ -1299,7 +1300,6 @@
                 }
             });
 
-            // Toggle the clicked section
             if (content.style.display === 'block') {
                 content.style.display = 'none';
                 icon.classList.remove('open');
@@ -1310,7 +1310,6 @@
         }
 
         function showAlert(type, message) {
-            // Clear all alerts first
             document.getElementById('alertSuccess').style.display = 'none';
             document.getElementById('alertInfo').style.display = 'none';
             document.getElementById('alertError').style.display = 'none';
