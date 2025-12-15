@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nigeria Tax Alert & Reminder System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .user-info {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.3);
+            border: 1px solid white;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.5);
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .auth-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        select, input[type="email"], input[type="date"], input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            margin-top: 10px;
+        }
+
+        .btn-link {
+            background: none;
+            color: #667eea;
+            text-decoration: underline;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-link:hover {
+            transform: none;
+            box-shadow: none;
+            color: #764ba2;
+        }
+
+        .dashboard {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #667eea;
+        }
+
+        .card.warning {
+            border-left-color: #ff9800;
+            background: #fff8f0;
+        }
+
+        .card.danger {
+            border-left-color: #f44336;
+            background: #ffebee;
+        }
+
+        .card.success {
+            border-left-color: #4caf50;
+            background: #f1f8f4;
+        }
+
+        .card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .deadline-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .deadline-item.overdue {
+            border-left-color: #f44336;
+            background: #ffebee;
+        }
+
+        .deadline-item.upcoming {
+            border-left-color: #ff9800;
+            background: #fff8f0;
+        }
+
+        .deadline-info {
+            flex: 1;
+        }
+
+        .deadline-info h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .deadline-info p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .deadline-days {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .deadline-days.overdue {
+            background: #f44336;
+        }
+
+        .deadline-days.warning {
+            background: #ff9800;
+        }
+
+        .penalty-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+
+        .penalty-box h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .penalty-amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: #d32f2f;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-small {
+            padding: 8px 20px;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-card h2 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            opacity: 0.9;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab:hover {
+            color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .user-info {
+                position: static;
+                margin-top: 15px;
+            }
+
+            .deadline-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .deadline-days {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🇳🇬 Nigeria Tax Alert & Reminder System</h1>
+            <p>Stay compliant with Nigeria Tax Act 2025 & Tax Administration Act 2025</p>
+            <div id="userInfo" class="user-info hidden">
+                <span id="currentUser"></span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Alert Messages -->
+            <div id="alertSuccess" class="alert success"></div>
+            <div id="alertInfo" class="alert info"></div>
+            <div id="alertError" class="alert error"></div>
+
+            <!-- Login/Register Section -->
+            <div id="authSection" class="auth-section">
+                <div class="tabs">
+                    <button class="tab active" onclick="showAuthTab('login')">Login</button>
+                    <button class="tab" onclick="showAuthTab('register')">Register</button>
+                </div>
+
+                <!-- Login Form -->
+                <div id="loginForm">
+                    <h2 style="margin-bottom: 20px; color: #333;">Login to Your Account</h2>
+                    
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address</label>
+                        <input type="email" id="loginEmail" placeholder="your@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                    </div>
+
+                    <button class="btn" onclick="loginUser()">Login</button>
+                </div>
+
+                <!-- Registration Form -->
+                <div id="registerForm" class="hidden">
+                    <h2 style="margin-bottom: 20px; color: #333;">Create New Account</h2>
+                    
+                    <div class="form-group">
+                        <label for="regName">Full Name / Company Name *</label>
+                        <input type="text" id="regName" placeholder="Enter your name or company name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regEmail">Email Address *</label>
+                        <input type="email" id="regEmail" placeholder="your@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regPassword">Password *</label>
+                        <input type="password" id="regPassword" placeholder="Create a password (min 6 characters)" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regEntityType">Entity Type *</label>
+                        <select id="regEntityType" required>
+                            <option value="">-- Select Entity Type --</option>
+                            <option value="company">Company (Turnover > ₦100M or Assets > ₦250M)</option>
+                            <option value="small_business">Small Business (Turnover ≤ ₦100M & Assets ≤ ₦250M)</option>
+                            <option value="individual">Individual</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tax Types to Monitor *</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="regTaxCIT" value="CIT">
+                                <label for="regTaxCIT">CIT (Company Tax)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="regTaxPAYE" value="PAYE">
+                                <label for="regTaxPAYE">PAYE</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="regTaxPIT" value="PIT">
+                                <label for="regTaxPIT">PIT (Individual Tax)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="regTaxVAT" value="VAT">
+                                <label for="regTaxVAT">VAT</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="regTaxWHT" value="WHT">
+                                <label for="regTaxWHT">WHT</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regYearEnd">Company Year End (for CIT)</label>
+                        <input type="date" id="regYearEnd">
+                    </div>
+
+                    <button class="btn" onclick="registerUser()">Create Account</button>
+                </div>
+            </div>
+
+            <!-- Dashboard -->
+            <div id="dashboard" class="dashboard">
+                <div class="grid-2" style="margin-bottom: 30px;">
+                    <div class="stat-card">
+                        <h2 id="upcomingCount">0</h2>
+                        <p>Upcoming Deadlines</p>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);">
+                        <h2 id="overdueCount">0</h2>
+                        <p>Overdue Items</p>
+                    </div>
+                </div>
+
+                <!-- Overdue Deadlines -->
+                <div id="overdueSection" class="card danger">
+                    <h3>⚠️ Overdue Deadlines</h3>
+                    <div id="overdueList"></div>
+                </div>
+
+                <!-- Upcoming Deadlines -->
+                <div id="upcomingSection" class="card warning">
+                    <h3>📅 Upcoming Deadlines (Next 30 Days)</h3>
+                    <div id="upcomingList"></div>
+                </div>
+
+                <!-- All Deadlines -->
+                <div class="card">
+                    <h3>📋 All Registered Tax Obligations</h3>
+                    <div id="allDeadlinesList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tax deadline configurations based on Nigeria Tax Act 2025
+        const TAX_DEADLINES = {
+            CIT: {
+                registration: { days: 0, type: 'Registration', penalty: { first: 50000, subsequent: 25000 } },
+                filing: { days: 180, type: 'Tax Return Filing', penalty: { first: 100000, subsequent: 50000 } },
+                payment: { days: 30, type: 'Tax Payment', penalty: { rate: 0.10, interest: true } }
+            },
+            PAYE: {
+                monthly_remittance: { days: 14, type: 'Monthly PAYE Remittance', penalty: { rate: 0.10, interest: true, criminal: true } },
+                annual_return: { days: 31, type: 'Annual PAYE Return', penalty: { first: 100000, subsequent: 50000 }, date: '01-31' }
+            },
+            PIT: {
+                registration: { days: 0, type: 'Registration', penalty: { first: 50000, subsequent: 25000 } },
+                filing: { days: 31, type: 'Annual Tax Return', penalty: { first: 100000, subsequent: 50000 }, date: '01-31' }
+            },
+            VAT: {
+                registration: { days: 0, type: 'VAT Registration', penalty: { first: 50000, subsequent: 25000 } },
+                monthly_return: { days: 21, type: 'Monthly VAT Return', penalty: { first: 100000, subsequent: 50000 } },
+                monthly_remittance: { days: 14, type: 'Monthly VAT Remittance', penalty: { rate: 0.10, interest: true } }
+            },
+            WHT: {
+                monthly_return: { days: 21, type: 'Monthly WHT Return', penalty: { first: 100000, subsequent: 50000 } },
+                monthly_remittance: { days: 21, type: 'Monthly WHT Remittance', penalty: { rate: 0.10, interest: true } }
+            }
+        };
+
+        let currentUser = null;
+        let users = {};
+        let userDeadlines = [];
+
+        // Load data from localStorage on page load
+        window.addEventListener('load', () => {
+            loadData();
+            checkAutoLogin();
+        });
+
+        function loadData() {
+            const savedUsers = localStorage.getItem('taxAlertUsers');
+            if (savedUsers) {
+                users = JSON.parse(savedUsers);
+            }
+
+            const savedSession = localStorage.getItem('taxAlertSession');
+            if (savedSession) {
+                const session = JSON.parse(savedSession);
+                if (session.email && users[session.email]) {
+                    autoLogin(session.email);
+                }
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('taxAlertUsers', JSON.stringify(users));
+        }
+
+        function saveSession(email) {
+            localStorage.setItem('taxAlertSession', JSON.stringify({ email, timestamp: Date.now() }));
+        }
+
+        function clearSession() {
+            localStorage.removeItem('taxAlertSession');
+        }
+
+        function checkAutoLogin() {
+            const savedSession = localStorage.getItem('taxAlertSession');
+            if (savedSession) {
+                const session = JSON.parse(savedSession);
+                // Auto-login if session is less than 7 days old
+                const weekInMs = 7 * 24 * 60 * 60 * 1000;
+                if (Date.now() - session.timestamp < weekInMs && users[session.email]) {
+                    autoLogin(session.email);
+                }
+            }
+        }
+
+        function autoLogin(email) {
+            currentUser = users[email];
+            showDashboard();
+        }
+
+        function showAuthTab(tab) {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (tab === 'login') {
+                document.getElementById('loginForm').classList.remove('hidden');
+                document.getElementById('registerForm').classList.add('hidden');
+            } else {
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('registerForm').classList.remove('hidden');
+            }
+        }
+
+        function loginUser() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                showAlert('error', 'Please enter both email and password');
+                return;
+            }
+
+            if (!users[email]) {
+                showAlert('error', 'Account not found. Please register first.');
+                return;
+            }
+
+            if (users[email].password !== password) {
+                showAlert('error', 'Incorrect password. Please try again.');
+                return;
+            }
+
+            currentUser = users[email];
+            saveSession(email);
+            showAlert('success', `Welcome back, ${currentUser.name}!`);
+            setTimeout(() => {
+                showDashboard();
+            }, 1000);
+        }
+
+        function registerUser() {
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const entityType = document.getElementById('regEntityType').value;
+            const yearEnd = document.getElementById('regYearEnd').value;
+
+            if (!name || !email || !password || !entityType) {
+                showAlert('error', 'Please fill in all required fields');
+                return;
+            }
+
+            if (password.length < 6) {
+                showAlert('error', 'Password must be at least 6 characters long');
+                return;
+            }
+
+            if (users[email]) {
+                showAlert('error', 'An account with this email already exists. Please login.');
+                return;
+            }
+
+            const selectedTaxes = [];
+            ['CIT', 'PAYE', 'PIT', 'VAT', 'WHT'].forEach(tax => {
+                if (document.getElementById(`regTax${tax}`).checked) {
+                    selectedTaxes.push(tax);
+                }
+            });
+
+            if (selectedTaxes.length === 0) {
+                showAlert('error', 'Please select at least one tax type');
+                return;
+            }
+
+            // Validate tax selections
+            if (entityType === 'individual' && selectedTaxes.includes('CIT')) {
+                showAlert('error', 'Individuals cannot select Company Income Tax (CIT)');
+                return;
+            }
+
+            if (entityType === 'small_business' && selectedTaxes.includes('CIT')) {
+                showAlert('info', 'Note: Small businesses with turnover ≤ ₦100M are exempt from CIT (0% rate)');
+            }
+
+            // Create new user
+            users[email] = {
+                name,
+                email,
+                password,
+                entityType,
+                yearEnd: yearEnd ? new Date(yearEnd) : null,
+                selectedTaxes,
+                registrationDate: new Date().toISOString(),
+                deadlines: []
+            };
+
+            saveData();
+            currentUser = users[email];
+            saveSession(email);
+
+            generateDeadlines();
+            updateUserDeadlines();
+
+            showAlert('success', `Account created successfully! Welcome, ${name}!`);
+            setTimeout(() => {
+                showDashboard();
+            }, 1500);
+        }
+
+        function logout() {
+            currentUser = null;
+            clearSession();
+            document.getElementById('authSection').classList.remove('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('userInfo').classList.add('hidden');
+            
+            // Clear forms
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+            
+            showAlert('success', 'Logged out successfully');
+        }
+
+        function generateDeadlines() {
+            const deadlines = [];
+            const today = new Date();
+
+            currentUser.selectedTaxes.forEach(tax => {
+                const config = TAX_DEADLINES[tax];
+                
+                Object.keys(config).forEach(obligationKey => {
+                    const obligation = config[obligationKey];
+                    let deadline;
+
+                    if (obligation.date) {
+                        const [month, day] = obligation.date.split('-');
+                        deadline = new Date(today.getFullYear(), parseInt(month) - 1, parseInt(day));
+                        if (deadline < today) {
+                            deadline.setFullYear(deadline.getFullYear() + 1);
+                        }
+                    } else if (tax === 'CIT' && obligationKey === 'filing' && currentUser.yearEnd) {
+                        deadline = new Date(currentUser.yearEnd);
+                        deadline.setMonth(deadline.getMonth() + 6);
+                    } else if (tax === 'CIT' && obligationKey === 'payment' && currentUser.yearEnd) {
+                        deadline = new Date(currentUser.yearEnd);
+                        deadline.setMonth(deadline.getMonth() + 7);
+                    } else if (obligationKey.includes('monthly')) {
+                        deadline = new Date(today.getFullYear(), today.getMonth() + 1, obligation.days);
+                        if (deadline < today) {
+                            deadline.setMonth(deadline.getMonth() + 1);
+                        }
+                    } else {
+                        deadline = new Date(today);
+                    }
+
+                    deadlines.push({
+                        tax,
+                        obligation: obligationKey,
+                        type: obligation.type,
+                        deadline: deadline.toISOString(),
+                        penalty: obligation.penalty,
+                        completed: false,
+                        id: Date.now() + Math.random()
+                    });
+                });
+            });
+
+            currentUser.deadlines = deadlines;
+            users[currentUser.email] = currentUser;
+            saveData();
+        }
+
+        function updateUserDeadlines() {
+            userDeadlines = currentUser.deadlines.map(d => ({
+                ...d,
+                deadline: new Date(d.deadline)
+            }));
+            userDeadlines.sort((a, b) => a.deadline - b.deadline);
+        }
+
+        function showDashboard() {
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            document.getElementById('userInfo').classList.remove('hidden');
+            document.getElementById('currentUser').textContent = `${currentUser.name} (${currentUser.entityType})`;
+
+            updateUserDeadlines();
+            refreshDashboard();
+        }
+
+        function refreshDashboard() {
+            const today = new Date();
+            let upcomingCount = 0;
+            let overdueCount = 0;
+
+            const overdueList = document.getElementById('overdueList');
+            const upcomingList = document.getElementById('upcomingList');
+            const allList = document.getElementById('allDeadlinesList');
+
+            overdueList.innerHTML = '';
+            upcomingList.innerHTML = '';
+            allList.innerHTML = '';
+
+            userDeadlines.forEach((item, index) => {
+                if (item.completed) return;
+
+                const daysUntil = calculateDaysUntil(item.deadline);
+                const isOverdue = daysUntil < 0;
+                const isUpcoming = daysUntil >= 0 && daysUntil <= 30;
+
+                if (isOverdue) overdueCount++;
+                if (isUpcoming) upcomingCount++;
+
+                const deadlineHTML = createDeadlineHTML(item, index, daysUntil);
+
+                if (isOverdue) {
+                    overdueList.innerHTML += deadlineHTML;
+                }
+                if (isUpcoming) {
+                    upcomingList.innerHTML += deadlineHTML;
+                }
+                allList.innerHTML += deadlineHTML;
+            });
+
+            document.getElementById('upcomingCount').textContent = upcomingCount;
+            document.getElementById('overdueCount').textContent = overdueCount;
+
+            document.getElementById('overdueSection').style.display = overdueCount > 0 ? 'block' : 'none';
+            document.getElementById('upcomingSection').style.display = upcomingCount > 0 ? 'block' : 'none';
+
+            if (allList.innerHTML === '') {
+                allList.innerHTML = '<p style="color: #666; padding: 20px; text-align: center;">All tax obligations completed! 🎉</p>';
+            }
+        }
+
+        function calculateDaysUntil(deadline) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const deadlineDate = new Date(deadline);
+            deadlineDate.setHours(0, 0, 0, 0);
+            const diff = deadlineDate - today;
+            return Math.ceil(diff / (1000 * 60 * 60 * 24));
+        }
+
+        function calculatePenalty(deadline, daysOverdue) {
+            const penalty = deadline.penalty;
+            
+            if (penalty.first && penalty.subsequent) {
+                const months = Math.ceil(Math.abs(daysOverdue) / 30);
+                if (months <= 1) {
+                    return penalty.first.toLocaleString();
+                } else {
+                    return (penalty.first + (penalty.subsequent * (months - 1))).toLocaleString();
+                }
+            } else if (penalty.rate) {
+                return `${(penalty.rate * 100)}% of tax due${penalty.interest ? ' + CBN interest rate' : ''}`;
+            }
+            
+            return 'Contact tax authority';
+        }
+
+        function createDeadlineHTML(item, index, daysUntil) {
+            const isOverdue = daysUntil < 0;
+            const statusClass = isOverdue ? 'overdue' : (daysUntil <= 7 ? 'upcoming' : '');
+            const daysClass = isOverdue ? 'overdue' : (daysUntil <= 7 ? 'warning' : '');
+            
+            const daysText = isOverdue 
+                ? `${Math.abs(daysUntil)} days overdue` 
+                : `${daysUntil} days remaining`;
+
+            const penaltyHTML = isOverdue 
+                ? `<div class="penalty-box">
+                    <h4>⚠️ Penalty Accrued:</h4>
+                    <div class="penalty-amount">₦${calculatePenalty(item, daysUntil)}</div>
+                    <p style="color: #856404; margin-top: 5px; font-size: 13px;">
+                        ${item.penalty.criminal ? '⚖️ Criminal liability may apply (up to 3 years imprisonment)' : ''}
+                    </p>
+                   </div>`
+                : '';
+
+            return `
+                <div class="deadline-item ${statusClass}">
+                    <div class="deadline-info">
+                        <h4>${item.tax} - ${item.type}</h4>
+                        <p>Due Date: ${item.deadline.toLocaleDateString('en-GB')}</p>
+                        ${penaltyHTML}
+                        <div class="action-buttons">
+                            <button class="btn btn-small btn-success" onclick="markComplete(${index})">
+                                ✓ Mark Completed
+                            </button>
+                        </div>
+                    </div>
+                    <div class="deadline-days ${daysClass}">
+                        ${daysText}
+                    </div>
+                </div>
+            `;
+        }
+
+        function markComplete(index) {
+            userDeadlines[index].completed = true;
+            
+            // Update in storage
+            currentUser.deadlines = userDeadlines.map(d => ({
+                ...d,
+                deadline: d.deadline.toISOString()
+            }));
+            users[currentUser.email] = currentUser;
+            saveData();
+            
+            refreshDashboard();
+            showAlert('success', `${userDeadlines[index].type} marked as completed!`);
+        }
+
+        function showAlert(type, message) {
+            const alertElement = type === 'success' 
+                ? document.getElementById('alertSuccess')
+                : type === 'error'
+                ? document.getElementById('alertError')
+                : document.getElementById('alertInfo');
+            
+            alertElement.textContent = message;
+            alertElement.style.display = 'block';
+
+            setTimeout(() => {
+                alertElement.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
