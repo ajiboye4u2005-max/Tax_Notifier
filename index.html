@@ -521,33 +521,145 @@
 
             <!-- Dashboard -->
             <div id="dashboard" class="dashboard">
-                <div class="grid-2" style="margin-bottom: 30px;">
-                    <div class="stat-card">
-                        <h2 id="upcomingCount">0</h2>
-                        <p>Upcoming Deadlines</p>
+                <!-- Dashboard Navigation Tabs -->
+                <div class="tabs">
+                    <button class="tab active" onclick="showDashboardTab('deadlines')">My Deadlines</button>
+                    <button class="tab" onclick="showDashboardTab('resources')">Tax Resources & Guide</button>
+                </div>
+
+                <!-- Deadlines Tab -->
+                <div id="deadlinesTab">
+                    <div class="grid-2" style="margin-bottom: 30px;">
+                        <div class="stat-card">
+                            <h2 id="upcomingCount">0</h2>
+                            <p>Upcoming Deadlines</p>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);">
+                            <h2 id="overdueCount">0</h2>
+                            <p>Overdue Items</p>
+                        </div>
                     </div>
-                    <div class="stat-card" style="background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);">
-                        <h2 id="overdueCount">0</h2>
-                        <p>Overdue Items</p>
+
+                    <!-- Overdue Deadlines -->
+                    <div id="overdueSection" class="card danger">
+                        <h3>⚠️ Overdue Deadlines</h3>
+                        <div id="overdueList"></div>
+                    </div>
+
+                    <!-- Upcoming Deadlines -->
+                    <div id="upcomingSection" class="card warning">
+                        <h3>📅 Upcoming Deadlines (Next 30 Days)</h3>
+                        <div id="upcomingList"></div>
+                    </div>
+
+                    <!-- All Deadlines -->
+                    <div class="card">
+                        <h3>📋 All Registered Tax Obligations</h3>
+                        <div id="allDeadlinesList"></div>
                     </div>
                 </div>
 
-                <!-- Overdue Deadlines -->
-                <div id="overdueSection" class="card danger">
-                    <h3>⚠️ Overdue Deadlines</h3>
-                    <div id="overdueList"></div>
-                </div>
+                <!-- Tax Resources Tab -->
+                <div id="resourcesTab" class="hidden">
+                    <div class="card">
+                        <h3>📚 Nigeria Tax Act 2025 - Quick Reference Guide</h3>
+                        
+                        <div style="margin-top: 20px;">
+                            <h4 style="color: #667eea; margin-bottom: 10px;">📊 Tax Rates</h4>
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                                <p><strong>Company Income Tax (CIT):</strong></p>
+                                <ul style="margin-left: 20px; margin-top: 10px;">
+                                    <li>Standard Rate: 30%</li>
+                                    <li>Small Companies (≤₦100M turnover, ≤₦250M assets): 0%</li>
+                                    <li>Minimum Effective Tax Rate: 15% (for large/multinational companies)</li>
+                                </ul>
+                                
+                                <p style="margin-top: 15px;"><strong>Personal Income Tax (PIT):</strong></p>
+                                <ul style="margin-left: 20px; margin-top: 10px;">
+                                    <li>First ₦800,000: 0%</li>
+                                    <li>₦800,001 - ₦3,000,000: 15%</li>
+                                    <li>₦3,000,001 - ₦12,000,000: 18%</li>
+                                    <li>₦12,000,001 - ₦25,000,000: 21%</li>
+                                    <li>₦25,000,001 - ₦50,000,000: 23%</li>
+                                    <li>Above ₦50,000,000: 25%</li>
+                                </ul>
+                                
+                                <p style="margin-top: 15px;"><strong>VAT Rate:</strong> 7.5%</p>
+                            </div>
 
-                <!-- Upcoming Deadlines -->
-                <div id="upcomingSection" class="card warning">
-                    <h3>📅 Upcoming Deadlines (Next 30 Days)</h3>
-                    <div id="upcomingList"></div>
-                </div>
+                            <h4 style="color: #667eea; margin-bottom: 10px;">⏰ Key Filing Deadlines</h4>
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                                <ul style="margin-left: 20px;">
+                                    <li><strong>CIT Filing:</strong> 6 months after year-end</li>
+                                    <li><strong>PIT Filing:</strong> January 31st annually</li>
+                                    <li><strong>VAT Returns:</strong> 21st of following month</li>
+                                    <li><strong>VAT Remittance:</strong> 14th of following month</li>
+                                    <li><strong>WHT Returns:</strong> 21st of following month</li>
+                                    <li><strong>PAYE Remittance:</strong> 14th of following month</li>
+                                    <li><strong>PAYE Annual Returns:</strong> January 31st</li>
+                                </ul>
+                            </div>
 
-                <!-- All Deadlines -->
-                <div class="card">
-                    <h3>📋 All Registered Tax Obligations</h3>
-                    <div id="allDeadlinesList"></div>
+                            <h4 style="color: #667eea; margin-bottom: 10px;">⚠️ Common Penalties</h4>
+                            <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border: 2px solid #ffc107; margin-bottom: 20px;">
+                                <ul style="margin-left: 20px;">
+                                    <li><strong>Failure to Register:</strong> ₦50,000 (first month) + ₦25,000/month</li>
+                                    <li><strong>Late Filing:</strong> ₦100,000 (first month) + ₦50,000/month</li>
+                                    <li><strong>Late Payment:</strong> 10% + CBN interest rate</li>
+                                    <li><strong>Failure to Deduct WHT:</strong> 40% of undeducted amount</li>
+                                    <li><strong>Non-remittance:</strong> 10% + interest + possible imprisonment (up to 3 years)</li>
+                                </ul>
+                            </div>
+
+                            <h4 style="color: #667eea; margin-bottom: 10px;">💰 Tax Exemptions & Reliefs</h4>
+                            <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; border: 2px solid #4caf50; margin-bottom: 20px;">
+                                <p><strong>VAT Zero-Rated Items:</strong></p>
+                                <ul style="margin-left: 20px; margin-top: 10px;">
+                                    <li>Basic food items (rice, bread, milk, vegetables, etc.)</li>
+                                    <li>Pharmaceuticals and medical equipment</li>
+                                    <li>Educational books and materials</li>
+                                    <li>Fertilizers and agricultural inputs</li>
+                                    <li>Exported goods and services</li>
+                                </ul>
+                                
+                                <p style="margin-top: 15px;"><strong>PIT Exemptions:</strong></p>
+                                <ul style="margin-left: 20px; margin-top: 10px;">
+                                    <li>Minimum wage earners</li>
+                                    <li>Military personnel wages</li>
+                                    <li>Pensions and gratuities</li>
+                                    <li>Government bonds interest</li>
+                                </ul>
+                            </div>
+
+                            <h4 style="color: #667eea; margin-bottom: 10px;">📋 Allowable Deductions (Companies)</h4>
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                                <ul style="margin-left: 20px;">
+                                    <li>Salaries, wages, and pension contributions</li>
+                                    <li>Rent on business premises</li>
+                                    <li>Interest on business loans (limited to 30% of EBITDA)</li>
+                                    <li>Repairs and maintenance</li>
+                                    <li>Bad debts (proven)</li>
+                                    <li>Donations to approved charities (up to 10% of profit)</li>
+                                    <li>R&D expenses (up to 5% of turnover)</li>
+                                    <li>Capital Allowances: 10-25% per year depending on asset type</li>
+                                </ul>
+                            </div>
+
+                            <h4 style="color: #667eea; margin-bottom: 10px;">🎯 Tax Compliance Checklist</h4>
+                            <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; border: 2px solid #2196f3;">
+                                <ol style="margin-left: 20px;">
+                                    <li style="margin-bottom: 10px;"><strong>Register for Tax ID</strong> - Before commencing business</li>
+                                    <li style="margin-bottom: 10px;"><strong>Maintain Proper Books</strong> - Keep records for minimum 6 years</li>
+                                    <li style="margin-bottom: 10px;"><strong>File Returns on Time</strong> - Set reminders for all deadlines</li>
+                                    <li style="margin-bottom: 10px;"><strong>Deduct & Remit Taxes</strong> - WHT, VAT, PAYE as applicable</li>
+                                    <li style="margin-bottom: 10px;"><strong>Pay on Time</strong> - Avoid 10% penalty + interest</li>
+                                    <li style="margin-bottom: 10px;"><strong>Claim All Deductions</strong> - Maximize legitimate tax reliefs</li>
+                                    <li style="margin-bottom: 10px;"><strong>Notify Address Changes</strong> - Within 30 days</li>
+                                    <li style="margin-bottom: 10px;"><strong>Seek Professional Advice</strong> - Use accredited tax agents when needed</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
