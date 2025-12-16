@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nigeria Tax Alert & Reminder System</title>
     <style>
-        /* [STYLES ARE KEPT THE SAME AS PREVIOUS ITERATION] */
         * {
             margin: 0;
             padding: 0;
@@ -33,7 +32,7 @@
             color: white;
             padding: 30px;
             text-align: center;
-            position: relative; 
+            position: relative;
         }
 
         .header h1 {
@@ -46,7 +45,6 @@
             opacity: 0.9;
         }
 
-        /* User Info Styles */
         .user-info {
             position: absolute;
             top: 20px;
@@ -76,14 +74,13 @@
             padding: 30px;
         }
 
-        /* Auth Section Styles */
         .auth-section {
             background: #f8f9fa;
             padding: 25px;
             border-radius: 10px;
             margin-bottom: 30px;
         }
-        
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -156,9 +153,29 @@
             transform: translateY(0);
         }
 
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .btn-success {
             background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
             margin-top: 10px;
+        }
+
+        .btn-link {
+            background: none;
+            color: #667eea;
+            text-decoration: underline;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-link:hover {
+            transform: none;
+            box-shadow: none;
+            color: #764ba2;
         }
 
         .dashboard {
@@ -176,7 +193,7 @@
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             border-left: 4px solid #667eea;
         }
 
@@ -188,6 +205,11 @@
         .card.danger {
             border-left-color: #f44336;
             background: #ffebee;
+        }
+
+        .card.success {
+            border-left-color: #4caf50;
+            background: #f1f8f4;
         }
 
         .card h3 {
@@ -301,7 +323,7 @@
             border: 1px solid #bee5eb;
         }
 
-        .alert.error { 
+        .alert.error {
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
@@ -334,35 +356,6 @@
             display: none;
         }
 
-        /* Styles for Tabs/Navigation */
-        .tab-nav {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #e0e0e0;
-        }
-
-        .tab-button {
-            padding: 15px 25px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            background: transparent;
-            color: #666;
-            transition: color 0.3s, border-bottom 0.3s;
-            margin-bottom: -2px; 
-        }
-
-        .tab-button:hover {
-            color: #1e3c72;
-        }
-
-        .tab-button.active {
-            color: #1e3c72;
-            border-bottom: 4px solid #1e3c72;
-        }
-        
-        /* Auth Form Tabs */
         .tabs {
             display: flex;
             gap: 10px;
@@ -390,80 +383,6 @@
         .tab:hover {
             color: #667eea;
         }
-        
-        /* Resource Guide Styles */
-        .resource-category-tab {
-            padding: 15px 20px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #f5f5f5;
-            cursor: pointer;
-            transition: background-color 0.3s, box-shadow 0.3s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .resource-category-tab:hover {
-            background-color: #eee;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        .resource-category-tab h4 {
-            margin: 0;
-            color: #1e3c72;
-            font-size: 18px;
-        }
-
-        .category-content {
-            border: 1px solid #e0e0e0;
-            border-top: none;
-            border-radius: 0 0 8px 8px;
-            padding: 20px;
-            margin-top: -10px;
-            margin-bottom: 20px;
-            background-color: white;
-            display: none;
-        }
-        
-        .category-content h5 {
-            color: #667eea;
-            margin-top: 15px;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #f0f0f0;
-            padding-bottom: 5px;
-            font-size: 16px;
-        }
-
-        .category-content table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        
-        .category-content th, .category-content td {
-            border: 1px solid #e0e0e0;
-            padding: 10px;
-            text-align: left;
-            font-size: 14px;
-        }
-
-        .category-content th {
-            background-color: #f8f9fa;
-            color: #333;
-            font-weight: 600;
-        }
-
-        .accordion-icon {
-            font-size: 20px;
-            transition: transform 0.3s;
-        }
-
-        .accordion-icon.open {
-            transform: rotate(180deg);
-        }
-
 
         @media (max-width: 768px) {
             .container {
@@ -477,7 +396,7 @@
             .header h1 {
                 font-size: 22px;
             }
-            
+
             .user-info {
                 position: static;
                 margin-top: 15px;
@@ -507,323 +426,148 @@
         </div>
 
         <div class="content">
-            
-            <div class="tab-nav">
-                <button class="tab-button active" onclick="showTab('alertSystem')">Alert & Reminder System</button>
-                <button class="tab-button" onclick="showTab('resources')">Tax Resources & Guide</button>
-            </div>
+            <!-- Alert Messages -->
+            <div id="alertSuccess" class="alert success"></div>
+            <div id="alertInfo" class="alert info"></div>
+            <div id="alertError" class="alert error"></div>
 
-            <div id="alertSystemContent">
-                <div id="alertSuccess" class="alert success"></div>
-                <div id="alertInfo" class="alert info"></div>
-                <div id="alertError" class="alert error"></div>
-                
-                <div id="authSection" class="auth-section">
-                    <div class="tabs">
-                        <button class="tab active" onclick="showAuthTab('login')">Login</button>
-                        <button class="tab" onclick="showAuthTab('register')">Register</button>
+            <!-- Login/Register Section -->
+            <div id="authSection" class="auth-section">
+                <div class="tabs">
+                    <button class="tab active" onclick="showAuthTab('login')">Login</button>
+                    <button class="tab" onclick="showAuthTab('register')">Register</button>
+                </div>
+
+                <!-- Login Form -->
+                <div id="loginForm">
+                    <h2 style="margin-bottom: 20px; color: #333;">Login to Your Account</h2>
+                    
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address</label>
+                        <input type="email" id="loginEmail" placeholder="your@email.com" required>
                     </div>
 
-                    <div id="loginForm">
-                        <h2 style="margin-bottom: 20px; color: #333;">Login to Your Account</h2>
-                        
-                        <div class="form-group">
-                            <label for="loginEmail">Email Address</label>
-                            <input type="email" id="loginEmail" placeholder="your@email.com" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="loginPassword">Password</label>
-                            <input type="password" id="loginPassword" placeholder="Enter your password" required>
-                        </div>
-
-                        <button class="btn" onclick="loginUser()">Login</button>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required>
                     </div>
 
-                    <div id="registerForm" class="hidden">
-                        <h2 style="margin-bottom: 20px; color: #333;">Create New Account</h2>
-                        
-                        <div class="form-group">
-                            <label for="regName">Full Name / Company Name *</label>
-                            <input type="text" id="regName" placeholder="Enter your name or company name" required>
-                        </div>
+                    <button class="btn" onclick="loginUser()">Login</button>
+                </div>
 
-                        <div class="form-group">
-                            <label for="regEmail">Email Address *</label>
-                            <input type="email" id="regEmail" placeholder="your@email.com" required>
-                        </div>
+                <!-- Registration Form -->
+                <div id="registerForm" class="hidden">
+                    <h2 style="margin-bottom: 20px; color: #333;">Create New Account</h2>
+                    
+                    <div class="form-group">
+                        <label for="regName">Full Name / Company Name *</label>
+                        <input type="text" id="regName" placeholder="Enter your name or company name" required>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="regPassword">Password *</label>
-                            <input type="password" id="regPassword" placeholder="Create a password (min 6 characters)" required>
-                        </div>
+                    <div class="form-group">
+                        <label for="regEmail">Email Address *</label>
+                        <input type="email" id="regEmail" placeholder="your@email.com" required>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="regEntityType">Entity Type *</label>
-                            <select id="regEntityType" required>
-                                <option value="">-- Select Entity Type --</option>
-                                <option value="company">Company (Turnover > ₦100M or Assets > ₦250M)</option>
-                                <option value="small_business">Small Business (Turnover ≤ ₦100M & Assets ≤ ₦250M)</option>
-                                <option value="individual">Individual</option>
-                            </select>
-                        </div>
+                    <div class="form-group">
+                        <label for="regPassword">Password *</label>
+                        <input type="password" id="regPassword" placeholder="Create a password (min 6 characters)" required>
+                    </div>
 
-                        <div class="form-group">
-                            <label>Tax Types to Monitor *</label>
-                            <div class="checkbox-group">
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="regTaxCIT" value="CIT">
-                                    <label for="regTaxCIT">CIT (Company Tax)</label>
-                                </div>
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="regTaxPAYE" value="PAYE">
-                                    <label for="regTaxPAYE">PAYE</label>
-                                </div>
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="regTaxPIT" value="PIT">
-                                    <label for="regTaxPIT">PIT (Individual Tax)</label>
-                                </div>
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="regTaxVAT" value="VAT">
-                                    <label for="regTaxVAT">VAT</label>
-                                </div>
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="regTaxWHT" value="WHT">
-                                    <label for="regTaxWHT">WHT</label>
-                                </div>
+                    <div class="form-group">
+                        <label for="regEntityType">Entity Type *</label>
+                        <select id="regEntityType" required>
+                            <option value="">-- Select Entity Type --</option>
+                            <option value="company">Company (Turnover > ₦100M or Assets > ₦250M)</option>
+                            <option value="small_business">Small Business (Turnover ≤ ₦100M & Assets ≤ ₦250M)</option>
+                            <option value="individual">Individual</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tax Types to Monitor *</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="regTaxCIT" value="CIT">
+                                <label for="regTaxCIT">CIT (Company Tax)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="regTaxPAYE" value="PAYE">
+                                <label for="regTaxPAYE">PAYE</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="regTaxPIT" value="PIT">
+                                <label for="regTaxPIT">PIT (Individual Tax)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="regTaxVAT" value="VAT">
+                                <label for="regTaxVAT">VAT</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="regTaxWHT" value="WHT">
+                                <label for="regTaxWHT">WHT</label>
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <label for="regYearEnd">Company Year End (for CIT)</label>
-                            <input type="date" id="regYearEnd">
-                        </div>
-
-                        <button class="btn" onclick="registerUser()">Create Account</button>
-                    </div>
-                </div>
-
-                <div id="dashboard" class="dashboard">
-                    <div class="grid-2" style="margin-bottom: 30px;">
-                        <div class="stat-card">
-                            <h2 id="upcomingCount">0</h2>
-                            <p>Upcoming Deadlines</p>
-                        </div>
-                        <div class="stat-card" style="background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);">
-                            <h2 id="overdueCount">0</h2>
-                            <p>Overdue Items</p>
-                        </div>
                     </div>
 
-                    <div id="overdueSection" class="card danger">
-                        <h3>⚠️ Overdue Deadlines</h3>
-                        <div id="overdueList"></div>
+                    <div class="form-group">
+                        <label for="regYearEnd">Company Year End (for CIT)</label>
+                        <input type="date" id="regYearEnd">
                     </div>
 
-                    <div id="upcomingSection" class="card warning">
-                        <h3>📅 Upcoming Deadlines (Next 30 Days)</h3>
-                        <div id="upcomingList"></div>
-                    </div>
-
-                    <div class="card">
-                        <h3>📋 All Registered Tax Obligations</h3>
-                        <div id="allDeadlinesList"></div>
-                    </div>
+                    <button class="btn" onclick="registerUser()">Create Account</button>
                 </div>
             </div>
 
-            <div id="resourcesSection" style="display: none;">
-                <h2 style="margin-bottom: 20px; color: #1e3c72;">Tax Obligations & Penalties Guide</h2>
-                
-                <div class="resource-category-tab" onclick="toggleAccordion('individualGuide')">
-                    <h4>👤 Individual Tax Obligations (PIT, CGT, Stamp Duties)</h4>
-                    <span class="accordion-icon">▼</span>
-                </div>
-                <div id="individualGuide" class="category-content">
-                    <p><strong>Definition:</strong> Applies to all individuals, including employees, sole proprietors, and partners. Individuals are taxed on a progressive scale.</p>
-                    <p><strong>Threshold:</strong> Progressive Tax Rates apply from 0% (first ₦800,000) up to 25% (above ₦50,000,000). Minimum Wage Earners are exempt.</p>
-
-                    <h5>Applicable Returns, Remittances, and Registration</h5>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Obligation Type</th>
-                                <th>Tax Type</th>
-                                <th>Due Date/Period</th>
-                                <th>Penalty for Default</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Registration (Tax ID/TIN)</td>
-                                <td>PIT</td>
-                                <td>Before commencing business/employment</td>
-                                <td>₦50,000 (1st month) + ₦25,000 for each subsequent month.</td>
-                            </tr>
-                            <tr>
-                                <td>Annual Tax Return Filing (Self-Assessment/Sole Proprietor)</td>
-                                <td>PIT</td>
-                                <td>By 31 January following the year of assessment.</td>
-                                <td>₦100,000 (1st month) + ₦50,000 for each subsequent month.</td>
-                            </tr>
-                            <tr>
-                                <td>PAYE Annual Return (If employer)</td>
-                                <td>PAYE</td>
-                                <td>By 31 January each year (for the preceding year).</td>
-                                <td>₦100,000 (1st month) + ₦50,000 for each subsequent month.</td>
-                            </tr>
-                            <tr>
-                                <td>Monthly PAYE Remittance (If employer)</td>
-                                <td>PAYE</td>
-                                <td>Within 14 days of deduction.</td>
-                                <td>10% of tax amount + interest + potential criminal liability.</td>
-                            </tr>
-                            <tr>
-                                <td>Capital Gains Tax (CGT) Filing</td>
-                                <td>CGT</td>
-                                <td>Upon disposal of taxable assets (same rules as PIT).</td>
-                                <td>Standard late filing/payment penalties apply.</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <!-- Dashboard -->
+            <div id="dashboard" class="dashboard">
+                <div class="grid-2" style="margin-bottom: 30px;">
+                    <div class="stat-card">
+                        <h2 id="upcomingCount">0</h2>
+                        <p>Upcoming Deadlines</p>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);">
+                        <h2 id="overdueCount">0</h2>
+                        <p>Overdue Items</p>
+                    </div>
                 </div>
 
-                <div class="resource-category-tab" onclick="toggleAccordion('smallBusinessGuide')">
-                    <h4>📈 Small Business Tax Obligations (Turnover ≤ ₦100M)</h4>
-                    <span class="accordion-icon">▼</span>
-                </div>
-                <div id="smallBusinessGuide" class="category-content">
-                    <p><strong>Definition:</strong> Companies or businesses with an annual gross turnover of **₦100,000,000 or less** AND total assets of **₦250,000,000 or less**.</p>
-                    <p><strong>Threshold:</strong> Turnover ≤ ₦100M. Exempt from CIT and VAT (on sales).</p>
-                    
-                    <h5>Applicable Returns, Remittances, and Registration</h5>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Obligation Type</th>
-                                <th>Tax Type</th>
-                                <th>Due Date/Period</th>
-                                <th>Penalty for Default</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Registration (Tax ID/TIN)</td>
-                                <td>CIT</td>
-                                <td>Before commencing business operations.</td>
-                                <td>₦50,000 (1st month) + ₦25,000 for each subsequent month.</td>
-                            </tr>
-                            <tr>
-                                <td>Annual Tax Return Filing (0% Tax Rate)</td>
-                                <td>CIT</td>
-                                <td>Within 6 months after the company's accounting year-end.</td>
-                                <td>₦100,000 (1st month) + ₦50,000 for each subsequent month (for late filing).</td>
-                            </tr>
-                            <tr>
-                                <td>VAT Obligation</td>
-                                <td>VAT</td>
-                                <td>N/A - Exempt from charging/filing VAT on sales.</td>
-                                <td>N/A</td>
-                            </tr>
-                            <tr>
-                                <td>Monthly PAYE Remittance (If employer)</td>
-                                <td>PAYE</td>
-                                <td>Within 14 days of deduction.</td>
-                                <td>10% of tax amount + interest + potential criminal liability.</td>
-                            </tr>
-                            <tr>
-                                <td>Monthly WHT Remittance/Return (If making payments)</td>
-                                <td>WHT</td>
-                                <td>Within 21 days of deduction/By 21st of following month.</td>
-                                <td>40% of amount not deducted; 10% p.a. + interest for non-remittance.</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <!-- Overdue Deadlines -->
+                <div id="overdueSection" class="card danger">
+                    <h3>⚠️ Overdue Deadlines</h3>
+                    <div id="overdueList"></div>
                 </div>
 
-                <div class="resource-category-tab" onclick="toggleAccordion('companyGuide')">
-                    <h4>🏢 Company Tax Obligations (Turnover > ₦100M)</h4>
-                    <span class="accordion-icon">▼</span>
-                </div>
-                <div id="companyGuide" class="category-content">
-                    <p><strong>Definition:</strong> Large and Medium Companies that do not meet the Small Business criteria (Turnover > ₦100M or Assets > ₦250M). Subject to the standard 30% CIT rate.</p>
-                    <p><strong>Threshold:</strong> Annual Gross Turnover > ₦100M OR Total Assets > ₦250M.</p>
-                    
-                    <h5>Applicable Returns, Remittances, and Registration</h5>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Obligation Type</th>
-                                <th>Tax Type</th>
-                                <th>Due Date/Period</th>
-                                <th>Penalty for Default</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Registration (Tax ID/TIN)</td>
-                                <td>CIT</td>
-                                <td>Before commencing business operations.</td>
-                                <td>₦50,000 (1st month) + ₦25,000 for each subsequent month.</td>
-                            </tr>
-                            <tr>
-                                <td>Annual Tax Return Filing</td>
-                                <td>CIT</td>
-                                <td>Within 6 months after the company's accounting year-end.</td>
-                                <td>₦100,000 (1st month) + ₦50,000 for each subsequent month (for late filing).</td>
-                            </tr>
-                            <tr>
-                                <td>Tax Payment (Self-Assessment)</td>
-                                <td>CIT</td>
-                                <td>30 days after assessment or 7 months after year-end.</td>
-                                <td>10% of unpaid tax amount + interest.</td>
-                            </tr>
-                            <tr>
-                                <td>Monthly VAT Return Filing</td>
-                                <td>VAT</td>
-                                <td>By the 21st of the month following the transaction.</td>
-                                <td>₦100,000 (1st month) + ₦50,000 for each subsequent month.</td>
-                            </tr>
-                            <tr>
-                                <td>Monthly VAT Remittance</td>
-                                <td>VAT</td>
-                                <td>By the 14th of the month following the transaction.</td>
-                                <td>10% of tax amount + interest + potential imprisonment.</td>
-                            </tr>
-                            <tr>
-                                <td>Monthly PAYE Remittance</td>
-                                <td>PAYE</td>
-                                <td>Within 14 days of deduction.</td>
-                                <td>10% of tax amount + interest + potential criminal liability.</td>
-                            </tr>
-                            <tr>
-                                <td>Monthly WHT Remittance/Return</td>
-                                <td>WHT</td>
-                                <td>Within 21 days of deduction/By 21st of following month.</td>
-                                <td>40% of amount not deducted; 10% p.a. + interest for non-remittance.</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <!-- Upcoming Deadlines -->
+                <div id="upcomingSection" class="card warning">
+                    <h3>📅 Upcoming Deadlines (Next 30 Days)</h3>
+                    <div id="upcomingList"></div>
                 </div>
 
+                <!-- All Deadlines -->
+                <div class="card">
+                    <h3>📋 All Registered Tax Obligations</h3>
+                    <div id="allDeadlinesList"></div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
+        // Tax deadline configurations based on Nigeria Tax Act 2025
         const TAX_DEADLINES = {
             CIT: {
-                registration: { days: 0, type: 'CIT Registration', penalty: { first: 50000, subsequent: 25000 } },
-                filing: { days: 180, type: 'CIT Tax Return Filing', penalty: { first: 100000, subsequent: 50000 } },
-                payment: { days: 30, type: 'CIT Tax Payment', penalty: { rate: 0.10, interest: true } }
+                registration: { days: 0, type: 'Registration', penalty: { first: 50000, subsequent: 25000 } },
+                filing: { days: 180, type: 'Tax Return Filing', penalty: { first: 100000, subsequent: 50000 } },
+                payment: { days: 30, type: 'Tax Payment', penalty: { rate: 0.10, interest: true } }
             },
             PAYE: {
                 monthly_remittance: { days: 14, type: 'Monthly PAYE Remittance', penalty: { rate: 0.10, interest: true, criminal: true } },
                 annual_return: { days: 31, type: 'Annual PAYE Return', penalty: { first: 100000, subsequent: 50000 }, date: '01-31' }
             },
             PIT: {
-                registration: { days: 0, type: 'PIT Registration', penalty: { first: 50000, subsequent: 25000 } },
-                filing: { days: 31, type: 'Annual PIT Tax Return', penalty: { first: 100000, subsequent: 50000 }, date: '01-31' }
+                registration: { days: 0, type: 'Registration', penalty: { first: 50000, subsequent: 25000 } },
+                filing: { days: 31, type: 'Annual Tax Return', penalty: { first: 100000, subsequent: 50000 }, date: '01-31' }
             },
             VAT: {
                 registration: { days: 0, type: 'VAT Registration', penalty: { first: 50000, subsequent: 25000 } },
@@ -840,6 +584,7 @@
         let users = {};
         let userDeadlines = [];
 
+        // Load data from localStorage on page load
         window.addEventListener('load', () => {
             loadData();
             checkAutoLogin();
@@ -855,9 +600,7 @@
             if (savedSession) {
                 const session = JSON.parse(savedSession);
                 if (session.email && users[session.email]) {
-                    if(users[session.email].registrationDate) {
-                        autoLogin(session.email);
-                    }
+                    autoLogin(session.email);
                 }
             }
         }
@@ -878,54 +621,23 @@
             const savedSession = localStorage.getItem('taxAlertSession');
             if (savedSession) {
                 const session = JSON.parse(savedSession);
+                // Auto-login if session is less than 7 days old
                 const weekInMs = 7 * 24 * 60 * 60 * 1000;
                 if (Date.now() - session.timestamp < weekInMs && users[session.email]) {
                     autoLogin(session.email);
                 }
             }
-            if (!currentUser) {
-                document.getElementById('authSection').classList.remove('hidden');
-            }
         }
 
         function autoLogin(email) {
             currentUser = users[email];
-            
-            // CRITICAL FIX: Regenerate deadlines if the existing list is empty (failed registration)
-            if (!currentUser.deadlines || currentUser.deadlines.length === 0) {
-                generateDeadlines(); 
-                saveData(); // Save the newly generated deadlines
-            }
-
-            document.getElementById('authSection').classList.add('hidden');
             showDashboard();
-            showTab('alertSystem');
         }
 
-        function showTab(tabName) {
-            const alertSystem = document.getElementById('alertSystemContent');
-            const resources = document.getElementById('resourcesSection');
-            const alertTab = document.querySelector('.tab-button:nth-child(1)');
-            const resourceTab = document.querySelector('.tab-button:nth-child(2)');
-
-            if (tabName === 'alertSystem') {
-                alertSystem.style.display = 'block';
-                resources.style.display = 'none';
-                alertTab.classList.add('active');
-                resourceTab.classList.remove('active');
-            } else if (tabName === 'resources') {
-                alertSystem.style.display = 'none';
-                resources.style.display = 'block';
-                alertTab.classList.remove('active');
-                resourceTab.classList.add('active');
-            }
-        }
-        
         function showAuthTab(tab) {
-            const tabs = document.querySelectorAll('.tabs .tab');
+            const tabs = document.querySelectorAll('.tab');
             tabs.forEach(t => t.classList.remove('active'));
-            const clickedTab = event.currentTarget;
-            clickedTab.classList.add('active');
+            event.target.classList.add('active');
 
             if (tab === 'login') {
                 document.getElementById('loginForm').classList.remove('hidden');
@@ -956,13 +668,6 @@
             }
 
             currentUser = users[email];
-            
-            // CRITICAL FIX: Regenerate deadlines if the existing list is empty (failed registration)
-            if (!currentUser.deadlines || currentUser.deadlines.length === 0) {
-                generateDeadlines(); 
-                saveData(); // Save the newly generated deadlines
-            }
-            
             saveSession(email);
             showAlert('success', `Welcome back, ${currentUser.name}!`);
             setTimeout(() => {
@@ -1004,31 +709,33 @@
                 return;
             }
 
+            // Validate tax selections
             if (entityType === 'individual' && selectedTaxes.includes('CIT')) {
                 showAlert('error', 'Individuals cannot select Company Income Tax (CIT)');
                 return;
             }
 
             if (entityType === 'small_business' && selectedTaxes.includes('CIT')) {
-                // Keep the info alert, does not stop registration
                 showAlert('info', 'Note: Small businesses with turnover ≤ ₦100M are exempt from CIT (0% rate)');
             }
 
-            // Create new user object
-            users[email] = {
+            // Create new user with deadlines array
+            currentUser = {
                 name,
                 email,
                 password,
                 entityType,
-                yearEnd: yearEnd || null, // Store as string 'YYYY-MM-DD'
+                yearEnd: yearEnd ? yearEnd : null,
                 selectedTaxes,
                 registrationDate: new Date().toISOString(),
-                deadlines: [] // Initialize empty, then populate
+                deadlines: []
             };
 
-            currentUser = users[email];
-            generateDeadlines(); // Generate deadlines immediately on registration
+            // Generate deadlines for the new user
+            generateDeadlines();
             
+            // Save to users object
+            users[email] = currentUser;
             saveData();
             saveSession(email);
 
@@ -1045,124 +752,131 @@
             document.getElementById('dashboard').classList.add('hidden');
             document.getElementById('userInfo').classList.add('hidden');
             
+            // Clear forms
             document.getElementById('loginEmail').value = '';
             document.getElementById('loginPassword').value = '';
             
             showAlert('success', 'Logged out successfully');
-            showTab('alertSystem');
         }
 
         function generateDeadlines() {
             const deadlines = [];
             const today = new Date();
-            // Normalize 'today' to midnight (00:00:00) for accurate comparison
-            today.setHours(0, 0, 0, 0); 
-            
-            const yearEnd = currentUser.yearEnd ? new Date(currentUser.yearEnd) : null;
 
             currentUser.selectedTaxes.forEach(tax => {
                 const config = TAX_DEADLINES[tax];
                 
                 Object.keys(config).forEach(obligationKey => {
                     const obligation = config[obligationKey];
-                    let deadline = null; 
+                    let deadline;
 
                     if (obligation.date) {
-                        // Annual deadlines (e.g., Jan 31st)
+                        // Fixed annual date (e.g., January 31)
                         const [month, day] = obligation.date.split('-');
                         deadline = new Date(today.getFullYear(), parseInt(month) - 1, parseInt(day));
-                        deadline.setHours(0, 0, 0, 0); 
-                        
-                        // If deadline passed this year, set it for next year
                         if (deadline < today) {
                             deadline.setFullYear(deadline.getFullYear() + 1);
                         }
-                    } else if (tax === 'CIT' && obligationKey.includes('filing') && yearEnd) {
-                        // CIT Filing (6 months after year end)
-                        deadline = new Date(yearEnd);
+                    } else if (tax === 'CIT' && obligationKey === 'filing' && currentUser.yearEnd) {
+                        // CIT filing: 6 months after year end
+                        deadline = new Date(currentUser.yearEnd);
                         deadline.setMonth(deadline.getMonth() + 6);
-                        deadline.setHours(0, 0, 0, 0); 
-                        
                         if (deadline < today) {
-                            deadline = new Date(yearEnd);
                             deadline.setFullYear(deadline.getFullYear() + 1);
-                            deadline.setMonth(deadline.getMonth() + 6);
                         }
-                    } else if (tax === 'CIT' && obligationKey.includes('payment') && yearEnd) {
-                        // CIT Payment (7 months after year end)
-                        deadline = new Date(yearEnd);
+                    } else if (tax === 'CIT' && obligationKey === 'payment' && currentUser.yearEnd) {
+                        // CIT payment: 30 days after assessment (assume 7 months after year end)
+                        deadline = new Date(currentUser.yearEnd);
                         deadline.setMonth(deadline.getMonth() + 7);
-                        deadline.setHours(0, 0, 0, 0); 
-                        
                         if (deadline < today) {
-                            deadline = new Date(yearEnd);
                             deadline.setFullYear(deadline.getFullYear() + 1);
-                            deadline.setMonth(deadline.getMonth() + 7);
                         }
                     } else if (obligationKey.includes('monthly')) {
-                        // Monthly obligations (PAYE, VAT, WHT Remittance/Return)
-                        const dayOfMonth = obligation.days;
-                        
-                        // Check if the current month's deadline has passed
-                        const currentMonthDeadline = new Date(today.getFullYear(), today.getMonth(), dayOfMonth);
-                        currentMonthDeadline.setHours(0, 0, 0, 0); 
-
-                        if (currentMonthDeadline < today) {
-                             // Deadline passed, set for next month
-                             deadline = new Date(today.getFullYear(), today.getMonth() + 1, dayOfMonth);
-                        } else {
-                            // Deadline is current or upcoming, use this month
-                            deadline = currentMonthDeadline;
+                        // Monthly obligations - create next 3 months
+                        for (let i = 0; i < 3; i++) {
+                            let monthlyDeadline = new Date(today.getFullYear(), today.getMonth() + i, obligation.days);
+                            if (monthlyDeadline >= today || i > 0) {
+                                deadlines.push({
+                                    tax,
+                                    obligation: obligationKey,
+                                    type: obligation.type,
+                                    deadline: monthlyDeadline.toISOString(),
+                                    penalty: obligation.penalty,
+                                    completed: false,
+                                    id: Date.now() + Math.random() + i
+                                });
+                            }
                         }
-                        deadline.setHours(0, 0, 0, 0); 
-
-                    } else if (obligationKey.includes('registration')) {
-                        // Registration deadlines are often immediate or initial, set as today
+                        return; // Skip the push at the end since we already added monthly deadlines
+                    } else if (obligationKey === 'registration') {
+                        // Registration deadlines (30 days from today)
                         deadline = new Date(today);
-                        deadline.setHours(0, 0, 0, 0); 
+                        deadline.setDate(deadline.getDate() + 30);
+                    } else {
+                        // Default: 30 days from today
+                        deadline = new Date(today);
+                        deadline.setDate(deadline.getDate() + 30);
                     }
 
-                    // Only push if a valid deadline date was generated
-                    if (deadline && !isNaN(deadline.getTime())) { 
-                        deadlines.push({
-                            tax,
-                            obligation: obligationKey,
-                            type: obligation.type,
-                            deadline: deadline.toISOString(), // Store as ISO string
-                            penalty: obligation.penalty,
-                            completed: false,
-                            id: Date.now() + Math.random() // Unique ID
-                        });
-                    }
+                    deadlines.push({
+                        tax,
+                        obligation: obligationKey,
+                        type: obligation.type,
+                        deadline: deadline.toISOString(),
+                        penalty: obligation.penalty,
+                        completed: false,
+                        id: Date.now() + Math.random()
+                    });
                 });
             });
 
             currentUser.deadlines = deadlines;
-            users[currentUser.email] = currentUser;
+            
+            // Save immediately after generating
+            if (users[currentUser.email]) {
+                users[currentUser.email].deadlines = deadlines;
+                saveData();
+            }
+            
+            console.log('Generated deadlines:', deadlines.length, 'items');
         }
 
         function updateUserDeadlines() {
-            // Convert ISO string back to Date object for calculation
+            if (!currentUser || !currentUser.deadlines) {
+                console.log('No deadlines found for current user');
+                userDeadlines = [];
+                return;
+            }
+            
             userDeadlines = currentUser.deadlines.map(d => ({
                 ...d,
                 deadline: new Date(d.deadline)
             }));
             userDeadlines.sort((a, b) => a.deadline - b.deadline);
+            
+            console.log('Loaded user deadlines:', userDeadlines.length, 'items');
         }
 
         function showDashboard() {
             document.getElementById('authSection').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
             document.getElementById('userInfo').classList.remove('hidden');
-            document.getElementById('currentUser').textContent = `${currentUser.name} (${currentUser.entityType})`;
+            document.getElementById('currentUser').textContent = `${currentUser.name} (${currentUser.entityType.replace('_', ' ')})`;
 
+            console.log('Current user:', currentUser);
+            console.log('User deadlines before update:', currentUser.deadlines);
+            
             updateUserDeadlines();
+            
+            console.log('User deadlines after update:', userDeadlines);
+            
             refreshDashboard();
         }
 
         function refreshDashboard() {
+            console.log('Refreshing dashboard with', userDeadlines.length, 'deadlines');
+            
             const today = new Date();
-            today.setHours(0, 0, 0, 0); 
             let upcomingCount = 0;
             let overdueCount = 0;
 
@@ -1174,17 +888,24 @@
             upcomingList.innerHTML = '';
             allList.innerHTML = '';
 
-            userDeadlines.forEach((item) => {
+            if (userDeadlines.length === 0) {
+                allList.innerHTML = '<p style="color: #666; padding: 20px; text-align: center;">No tax obligations found. Please contact support.</p>';
+                document.getElementById('upcomingCount').textContent = '0';
+                document.getElementById('overdueCount').textContent = '0';
+                return;
+            }
+
+            userDeadlines.forEach((item, index) => {
                 if (item.completed) return;
 
-                const daysUntil = calculateDaysUntil(item.deadline); 
+                const daysUntil = calculateDaysUntil(item.deadline);
                 const isOverdue = daysUntil < 0;
                 const isUpcoming = daysUntil >= 0 && daysUntil <= 30;
 
                 if (isOverdue) overdueCount++;
                 if (isUpcoming) upcomingCount++;
 
-                const deadlineHTML = createDeadlineHTML(item, daysUntil);
+                const deadlineHTML = createDeadlineHTML(item, index, daysUntil);
 
                 if (isOverdue) {
                     overdueList.innerHTML += deadlineHTML;
@@ -1202,15 +923,16 @@
             document.getElementById('upcomingSection').style.display = upcomingCount > 0 ? 'block' : 'none';
 
             if (allList.innerHTML === '') {
-                allList.innerHTML = '<p style="color: #666; padding: 20px; text-align: center;">All pending tax obligations completed! 🎉</p>';
+                allList.innerHTML = '<p style="color: #666; padding: 20px; text-align: center;">All tax obligations completed! 🎉</p>';
             }
         }
 
-        function calculateDaysUntil(deadlineDate) {
+        function calculateDaysUntil(deadline) {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-            
-            const diff = deadlineDate.getTime() - today.getTime();
+            const deadlineDate = new Date(deadline);
+            deadlineDate.setHours(0, 0, 0, 0);
+            const diff = deadlineDate - today;
             return Math.ceil(diff / (1000 * 60 * 60 * 24));
         }
 
@@ -1231,7 +953,7 @@
             return 'Contact tax authority';
         }
 
-        function createDeadlineHTML(item, daysUntil) {
+        function createDeadlineHTML(item, index, daysUntil) {
             const isOverdue = daysUntil < 0;
             const statusClass = isOverdue ? 'overdue' : (daysUntil <= 7 ? 'upcoming' : '');
             const daysClass = isOverdue ? 'overdue' : (daysUntil <= 7 ? 'warning' : '');
@@ -1242,28 +964,23 @@
 
             const penaltyHTML = isOverdue 
                 ? `<div class="penalty-box">
-                    <h4>⚠️ Estimated Penalty:</h4>
+                    <h4>⚠️ Penalty Accrued:</h4>
                     <div class="penalty-amount">₦${calculatePenalty(item, daysUntil)}</div>
                     <p style="color: #856404; margin-top: 5px; font-size: 13px;">
                         ${item.penalty.criminal ? '⚖️ Criminal liability may apply (up to 3 years imprisonment)' : ''}
                     </p>
                    </div>`
                 : '';
-                
-            const deadlineDate = item.deadline.toLocaleDateString('en-GB');
 
             return `
                 <div class="deadline-item ${statusClass}">
                     <div class="deadline-info">
                         <h4>${item.tax} - ${item.type}</h4>
-                        <p>Due Date: ${deadlineDate}</p>
+                        <p>Due Date: ${item.deadline.toLocaleDateString('en-GB')}</p>
                         ${penaltyHTML}
                         <div class="action-buttons">
-                            <button class="btn btn-small btn-success" onclick="markComplete('${item.id}')">
+                            <button class="btn btn-small btn-success" onclick="markComplete(${index})">
                                 ✓ Mark Completed
-                            </button>
-                            <button class="btn btn-small" onclick="showAlert('info', 'Reminder email simulated for ${item.type}')">
-                                📧 Send Reminder Now
                             </button>
                         </div>
                     </div>
@@ -1274,46 +991,22 @@
             `;
         }
 
-        function markComplete(id) {
-            const numId = parseFloat(id);
-            const indexToUpdate = currentUser.deadlines.findIndex(d => d.id === numId);
-            if (indexToUpdate !== -1) {
-                currentUser.deadlines[indexToUpdate].completed = true;
-                
-                users[currentUser.email] = currentUser;
-                saveData();
-                
-                refreshDashboard();
-                showAlert('success', `${currentUser.deadlines[indexToUpdate].type} marked as completed!`);
-            }
-        }
-        
-        function toggleAccordion(id) {
-            const content = document.getElementById(id);
-            const tabButton = content.previousElementSibling;
-            const icon = tabButton.querySelector('.accordion-icon');
-
-            document.querySelectorAll('.category-content').forEach(otherContent => {
-                if (otherContent.id !== id && otherContent.style.display === 'block') {
-                    otherContent.style.display = 'none';
-                    otherContent.previousElementSibling.querySelector('.accordion-icon').classList.remove('open');
-                }
-            });
-
-            if (content.style.display === 'block') {
-                content.style.display = 'none';
-                icon.classList.remove('open');
-            } else {
-                content.style.display = 'block';
-                icon.classList.add('open');
-            }
+        function markComplete(index) {
+            userDeadlines[index].completed = true;
+            
+            // Update in storage
+            currentUser.deadlines = userDeadlines.map(d => ({
+                ...d,
+                deadline: d.deadline.toISOString()
+            }));
+            users[currentUser.email] = currentUser;
+            saveData();
+            
+            refreshDashboard();
+            showAlert('success', `${userDeadlines[index].type} marked as completed!`);
         }
 
         function showAlert(type, message) {
-            document.getElementById('alertSuccess').style.display = 'none';
-            document.getElementById('alertInfo').style.display = 'none';
-            document.getElementById('alertError').style.display = 'none';
-
             const alertElement = type === 'success' 
                 ? document.getElementById('alertSuccess')
                 : type === 'error'
