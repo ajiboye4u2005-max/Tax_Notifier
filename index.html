@@ -1118,6 +1118,22 @@
             showAlert('success', `${userDeadlines[index].type} marked as completed!`);
         }
 
+        function showDashboardTab(tab) {
+            // Update tab buttons
+            const tabs = document.querySelectorAll('#dashboard .tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Show selected tab content
+            if (tab === 'deadlines') {
+                document.getElementById('deadlinesTab').classList.remove('hidden');
+                document.getElementById('resourcesTab').classList.add('hidden');
+            } else {
+                document.getElementById('deadlinesTab').classList.add('hidden');
+                document.getElementById('resourcesTab').classList.remove('hidden');
+            }
+        }
+
         function showAlert(type, message) {
             const alertElement = type === 'success' 
                 ? document.getElementById('alertSuccess')
